@@ -4,7 +4,7 @@ Projekt na przedmiot Bazy Danych 2
 
 ### Pomysły na funkcje
 
-- Przeglądanie dostępnych gier
+- Przeglądanie dostępnych gier MR
 - Podgląd co wyporzyczone
 - dodanie rezerwacji
 - oddanie gry
