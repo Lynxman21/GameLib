@@ -6,10 +6,8 @@ import jakarta.persistence.*;
 @Table(name = "game_count_vw")
 public class GameCountVW {
     @Id
-    @OneToOne
-    @JoinColumn(name = "game_id")
     @Column(name = "game_id")
-    private Game game;
+    private int id;
 
     private String name;
 
@@ -18,8 +16,8 @@ public class GameCountVW {
     public GameCountVW() {
     }
 
-    public Game getGame() {
-        return game;
+    public int getId() {
+        return id;
     }
 
     public String getName() {
@@ -30,8 +28,8 @@ public class GameCountVW {
         return amount;
     }
 
-    public void setGame(Game game) {
-        this.game = game;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setName(String name) {

@@ -22,6 +22,7 @@
         <mapping class="Entities.CategoryGameLinkId"/>
         <mapping class="Entities.CurrBorrowed"/>
         <mapping class="Entities.Game"/>
+        <mapping class="Entities.GameCountVW"/>
         <mapping class="Entities.GameCopy"/>
         <mapping class="Entities.Member"/>
         <mapping class="Entities.Publisher"/>
