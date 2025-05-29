@@ -6,17 +6,17 @@ import java.util.Objects;
 
 @Embeddable
 public class CategoryGameLinkId implements Serializable {
-    private int categoryId;
-    private int gameId;
+    private Integer categoryId;
+    private Integer gameId;
 
     public CategoryGameLinkId() {}
 
-    public CategoryGameLinkId(int categoryId, int gameId) {
+    public CategoryGameLinkId(Integer categoryId, Integer gameId) {
         this.categoryId = categoryId;
         this.gameId = gameId;
     }
 
-    public int getCategoryId() {
+    public Integer getCategoryId() {
         return categoryId;
     }
 
@@ -24,7 +24,7 @@ public class CategoryGameLinkId implements Serializable {
         this.categoryId = categoryId;
     }
 
-    public int getGameId() {
+    public Integer getGameId() {
         return gameId;
     }
 

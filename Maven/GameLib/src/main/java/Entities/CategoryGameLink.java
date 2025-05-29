@@ -11,11 +11,13 @@ public class CategoryGameLink {
     private CategoryGameLinkId id;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", insertable = false, updatable = false)
+    @MapsId("categoryId")
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "game_id", insertable = false, updatable = false)
+    @MapsId("gameId")
+    @JoinColumn(name = "game_id", nullable = false)
     private Game game;
 
     public CategoryGameLink() {}

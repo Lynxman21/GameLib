@@ -3,7 +3,10 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import java.time.LocalDate;
+import java.util.List;
+
 import Entities.*;
+import org.hibernate.query.Query;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,8 +15,8 @@ public class Main {
 //        GameDAO gameDao = null;
 //
 //        //Kod testowy, sprawdza czy dodawanie do tych pojedyńczych tabel działa
-//        try {
-//            session = HibernateUtil.getSessionFactory().openSession();
+        try (SessionFactory sessionFactory = HibernateUtil.getSessionFactory()){
+
 //            transaction = session.beginTransaction();
 //
 //            // Add a Publisher
@@ -49,7 +52,24 @@ public class Main {
 //            }
 //        }
 
-        GamesDisplayer gamesDisplayer = new GamesDisplayer();
-        gamesDisplayer.printAllResults();
+//        GamesDisplayer gamesDisplayer = new GamesDisplayer();
+//        gamesDisplayer.printAllResults();
+
+        DataGenerator dataGenerator = new DataGenerator(sessionFactory);
+        dataGenerator.generateData();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        // Query to fetch all members
+        Query<Member> query = session.createQuery("FROM Member", Member.class);
+        List<Member> members = query.getResultList();
+
+        // Print each member
+        for (Member member : members) {
+            System.out.println(member);
+        }
+
+        session.getTransaction().commit();
+        }
     }
 }

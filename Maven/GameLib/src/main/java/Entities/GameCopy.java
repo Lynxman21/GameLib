@@ -16,7 +16,7 @@ public class GameCopy {
     @JoinColumn(name = "game_id", nullable = false)
     private Game game;
 
-    @Column(name = "acquired_day")
+    @Column(name = "acquired_date")
     private LocalDate acquiredDay;
 
     public GameCopy() {}
