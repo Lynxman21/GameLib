@@ -1,0 +1,69 @@
+package dao;
+
+import Entities.*;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+
+import java.time.LocalDate;
+import java.util.List;
+
+public class BorrowedHistDAO {
+    private final SessionFactory sessionFactory;
+
+    public BorrowedHistDAO(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
+    public void addBorrowedHistoryRecord(int currBorrowedId){
+        //TODO możliwe że do zmiany będą parametry funkcji ale to do przedyskutowania
+        try(Session session = sessionFactory.openSession()){
+            Transaction transaction = session.beginTransaction();
+            try{
+                CurrBorrowed currBorrowed = session.get(CurrBorrowed.class, currBorrowedId);
+
+                if(currBorrowed == null){
+                    throw new IllegalArgumentException("Cannot find row in curr_borrowed table corresponding to provided ID");
+                }
+
+                GameCopy gameCopy = currBorrowed.getGameCopy();
+                Member member =  currBorrowed.getMember();
+
+                if(gameCopy == null || member == null){
+                    throw new IllegalArgumentException("Cannot find member or game copy with provided ID's");
+                }
+
+                BorrowedHist record = new BorrowedHist();
+
+                record.setCopyId(gameCopy);
+                record.setMemberId(member);
+                record.setBorrowedDate(currBorrowed.getBorrowedDate());
+                record.setDueDate(currBorrowed.getDueDate());
+                record.setActualReturnDate(LocalDate.now());
+                record.setPenalty(0);
+                record.setStatus("R");
+
+                session.persist(record);
+            }catch (Exception e){
+                transaction.rollback();
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    public void printAllRecords(){
+        try(Session session = sessionFactory.openSession()){
+            session.beginTransaction();
+            Query<BorrowedHist> query = session.createQuery("FROM BorrowedHist", BorrowedHist.class);
+            List<BorrowedHist> borrowedHists = query.getResultList();
+
+            for (BorrowedHist borrowedRecord : borrowedHists) {
+                System.out.println(borrowedRecord);
+            }
+
+            session.getTransaction().commit();
+        }
+    }
+}

@@ -1,11 +1,13 @@
 package dao;
 
+import Entities.BorrowedHist;
 import Entities.CurrBorrowed;
 import Entities.GameCopy;
 import Entities.Member;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -71,6 +73,20 @@ public class CurrBorrowedDAO {
                 transaction.rollback();
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void printAllRecords(){
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            Query<CurrBorrowed> query = session.createQuery("FROM CurrBorrowed", CurrBorrowed.class);
+            List<CurrBorrowed> borrowed_curr = query.getResultList();
+
+            for (CurrBorrowed borrowed : borrowed_curr) {
+                System.out.println(borrowed);
+            }
+
+            session.getTransaction().commit();
         }
     }
 }
