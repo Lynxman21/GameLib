@@ -12,7 +12,7 @@ Projekt na przedmiot Bazy Danych 2
 - Przeglądanie dostępnych gier MR 
 - Podgląd co wypożyczone 🛑
 - dodanie rezerwacji ✅
-- oddanie gry 🚧
+- oddanie gry ✔️
 - sprawdzenie historii 🛑
 - sorty\filtrowanie (widok) 🛑
 - suma kar 🛑
