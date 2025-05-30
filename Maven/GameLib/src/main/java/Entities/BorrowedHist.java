@@ -24,7 +24,7 @@ public class BorrowedHist {
     @Column(name = "borrowed_date")
     private LocalDate borrowedDate;
 
-    @Column(name = "due_date")
+    @Column(name = "due_to")
     private LocalDate dueDate;
 
     @Column(name = "actual_return_date")
