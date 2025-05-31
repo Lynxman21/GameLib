@@ -10,9 +10,9 @@ Projekt na przedmiot Bazy Danych 2
 ### Pomysły na funkcje
 
 - Przeglądanie dostępnych gier MR 
-- Podgląd co wypożyczone 🛑
+- Podgląd co wypożyczone ✔️
 - dodanie rezerwacji ✅
 - oddanie gry ✔️
-- sprawdzenie historii 🛑
+- sprawdzenie historii ✔️
 - sorty\filtrowanie (widok) 🛑
 - suma kar 🛑
