@@ -91,4 +91,14 @@ public class BorrowedHistDAO {
             session.getTransaction().commit();
         }
     }
+
+    public double SumOfPenalties(int id) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            Double sumPen = (Double) session.createQuery("select sum(h.penalty) from BorrowedHist h where h.member.id = :id")
+                    .setParameter("id", id)
+                    .getSingleResult();
+            return sumPen != null ? sumPen : 0.0;
+        }
+    }
 }
