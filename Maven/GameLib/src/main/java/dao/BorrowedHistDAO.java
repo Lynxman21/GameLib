@@ -7,6 +7,7 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BorrowedHistDAO {
@@ -39,7 +40,7 @@ public class BorrowedHistDAO {
                 record.setCopyId(gameCopy);
                 record.setMemberId(member);
                 record.setBorrowedDate(currBorrowed.getBorrowedDate());
-                record.setDueDate(currBorrowed.getDueDate());
+                record.setDueDate(currBorrowed.getDueTo());
                 record.setActualReturnDate(LocalDate.now());
                 record.setPenalty(0);
                 record.setStatus("R");
@@ -52,6 +53,30 @@ public class BorrowedHistDAO {
 
         }
     }
+
+    public List<BorrowedHist> checkBorrowedHistForMember(Member member){
+        List <BorrowedHist> result = new ArrayList<>();
+        try(Session session = sessionFactory.openSession()){
+            Transaction transaction = session.beginTransaction();
+            try{
+                if(member == null){
+                    throw new IllegalArgumentException("Provided member cannot be null");
+                }
+                int memberId = member.getId();
+                String hql = "FROM BorrowedHist bc WHERE bc.member.id = :memberId";
+                result = session.createQuery(hql, BorrowedHist.class)
+                        .setParameter("memberId", memberId)
+                        .getResultList();
+                transaction.commit();
+            }
+            catch (Exception e){
+                transaction.rollback();
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
 
     public void printAllRecords(){
         try(Session session = sessionFactory.openSession()){

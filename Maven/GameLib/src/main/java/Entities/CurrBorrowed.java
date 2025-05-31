@@ -24,8 +24,8 @@ public class CurrBorrowed {
     @Column(name = "borrowed_date")
     private LocalDate borrowedDate;
 
-    @Column(name = "due_date")
-    private LocalDate dueDate;
+    @Column(name = "due_to")
+    private LocalDate dueTo;
 
     public CurrBorrowed() {}
 
@@ -57,12 +57,12 @@ public class CurrBorrowed {
         this.borrowedDate = borrowedDate;
     }
 
-    public LocalDate getDueDate() {
-        return dueDate;
+    public LocalDate getDueTo() {
+        return dueTo;
     }
 
-    public void setDueDate(LocalDate dueDate) {
-        this.dueDate = dueDate;
+    public void setDueTo(LocalDate dueDate) {
+        this.dueTo = dueDate;
     }
 
     @Override
@@ -72,7 +72,7 @@ public class CurrBorrowed {
                 ", copyId=" + gameCopy.getId() +
                 ", memberId=" + member.getId() +
                 ", borrowedDate=" + borrowedDate +
-                ", dueDate=" + dueDate +
+                ", dueDate=" + dueTo +
                 '}';
     }
 
@@ -85,11 +85,11 @@ public class CurrBorrowed {
                 Objects.equals(gameCopy, that.gameCopy) &&
                 Objects.equals(member, that.member) &&
                 Objects.equals(borrowedDate, that.borrowedDate) &&
-                Objects.equals(dueDate, that.dueDate);
+                Objects.equals(dueTo, that.dueTo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, gameCopy, member, borrowedDate, dueDate);
+        return Objects.hash(id, gameCopy, member, borrowedDate, dueTo);
     }
 }
