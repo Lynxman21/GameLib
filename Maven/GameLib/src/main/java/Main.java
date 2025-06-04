@@ -9,13 +9,16 @@ import java.util.List;
 
 import Entities.*;
 import org.hibernate.query.Query;
+import search.GameFilter;
 
 public class Main {
     public static void main(String[] args) {
         try (SessionFactory sessionFactory = HibernateUtil.getSessionFactory()) {
-            LoginManager loginManager = new LoginManager(sessionFactory);
-            loginManager.logIn("ann.kowalska@example.com");
-            System.out.println(loginManager.getId());
+            GameFilter gameFilte = new GameFilter();
+            gameFilte.setCategoryName("Category 1");
+            System.out.println(gameFilte);
+            GamesDisplayer gamesDisplayer = new GamesDisplayer(sessionFactory,gameFilte);
+            gamesDisplayer.printAllResults();
         }
     }
 }
