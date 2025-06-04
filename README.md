@@ -14,5 +14,5 @@ Projekt na przedmiot Bazy Danych 2
 - dodanie rezerwacji ✅
 - oddanie gry ✔️
 - sprawdzenie historii ✔️
-- sorty\filtrowanie (widok) 🛑
+- sorty\filtrowanie (widok) ✔️
 - suma kar oraz login ✔️
