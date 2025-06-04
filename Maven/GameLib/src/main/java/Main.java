@@ -13,7 +13,9 @@ import org.hibernate.query.Query;
 public class Main {
     public static void main(String[] args) {
         try (SessionFactory sessionFactory = HibernateUtil.getSessionFactory()) {
-
+            LoginManager loginManager = new LoginManager(sessionFactory);
+            loginManager.logIn("ann.kowalska@example.com");
+            System.out.println(loginManager.getId());
         }
     }
 }
