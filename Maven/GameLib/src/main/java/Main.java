@@ -10,14 +10,14 @@ import java.util.List;
 import Entities.*;
 import org.hibernate.query.Query;
 import search.GameFilter;
+import search.SortType;
 
 public class Main {
     public static void main(String[] args) {
         try (SessionFactory sessionFactory = HibernateUtil.getSessionFactory()) {
             GameFilter gameFilte = new GameFilter();
-            gameFilte.setCategoryName("Category 1");
-            System.out.println(gameFilte);
-            GamesDisplayer gamesDisplayer = new GamesDisplayer(sessionFactory,gameFilte);
+            gameFilte.setCategoryName("Category 2");
+            GamesDisplayer gamesDisplayer = new GamesDisplayer(sessionFactory,gameFilte, SortType.NAME_DESC);
             gamesDisplayer.printAllResults();
         }
     }
