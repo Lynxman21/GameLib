@@ -3,6 +3,7 @@ package dao;
 import Entities.CurrBorrowed;
 import Entities.GameCopy;
 import Entities.Member;
+import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -27,6 +28,7 @@ public class CurrBorrowedDAO {
                         "(SELECT cb.gameCopy.id FROM CurrBorrowed cb)";
                 List<GameCopy> availableCopies = session.createQuery(hql, GameCopy.class)
                         .setParameter("gameId", gameId)
+                        .setLockMode(LockMode.PESSIMISTIC_WRITE.toJpaLockMode())
                         .getResultList();
 
                 if (availableCopies.isEmpty()) {
