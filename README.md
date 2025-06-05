@@ -42,4 +42,3 @@ Projekt na przedmiot Bazy Danych 2
 
 ### DataGenerator i DatabaseConnectionTester
 Klasy testowe, nie będą używane później w projekcie. 
-
