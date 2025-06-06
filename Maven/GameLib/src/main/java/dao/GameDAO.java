@@ -26,6 +26,17 @@ public class GameDAO {
                 .list();
     }
 
+    public Game findGameByName(String name) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("select g from Game g where g.name=:name",Game.class)
+                    .setParameter("name",name)
+                    .getSingleResult();
+        } catch (Exception e) {
+            System.out.println("Błąd podczas wyszukiwania gier: " + e.getMessage());
+            return null;
+        }
+    }
+
     public List<Game> findAllAvailableGames(GameFilter gameFilter) {
         try (Session session = sessionFactory.openSession()) {
 

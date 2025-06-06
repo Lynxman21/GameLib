@@ -54,6 +54,43 @@ public class BorrowedHistDAO {
         }
     }
 
+    public void addBorrowedHistoryRecord(int currBorrowedId, int penalty){
+        //TODO możliwe że do zmiany będą parametry funkcji ale to do przedyskutowania
+        try(Session session = sessionFactory.openSession()){
+            Transaction transaction = session.beginTransaction();
+            try{
+                CurrBorrowed currBorrowed = session.get(CurrBorrowed.class, currBorrowedId);
+
+                if(currBorrowed == null){
+                    throw new IllegalArgumentException("Cannot find row in curr_borrowed table corresponding to provided ID");
+                }
+
+                GameCopy gameCopy = currBorrowed.getGameCopy();
+                Member member =  currBorrowed.getMember();
+
+                if(gameCopy == null || member == null){
+                    throw new IllegalArgumentException("Cannot find member or game copy with provided ID's");
+                }
+
+                BorrowedHist record = new BorrowedHist();
+
+                record.setCopyId(gameCopy);
+                record.setMemberId(member);
+                record.setBorrowedDate(currBorrowed.getBorrowedDate());
+                record.setDueDate(currBorrowed.getDueTo());
+                record.setActualReturnDate(LocalDate.now());
+                record.setPenalty(penalty);
+                record.setStatus("D");
+
+                session.persist(record);
+            }catch (Exception e){
+                transaction.rollback();
+                e.printStackTrace();
+            }
+
+        }
+    }
+
     public List<BorrowedHist> checkBorrowedHistForMember(Member member){
         List <BorrowedHist> result = new ArrayList<>();
         try(Session session = sessionFactory.openSession()){

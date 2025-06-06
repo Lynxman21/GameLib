@@ -1,3 +1,5 @@
+package manager;
+
 import Entities.Game;
 import dao.GameDAO;
 import org.hibernate.SessionFactory;
@@ -5,7 +7,6 @@ import search.GameFilter;
 import search.SortData;
 import search.SortType;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 

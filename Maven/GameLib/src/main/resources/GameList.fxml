@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import search.SortType?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controler.GameListControler">
+   <top>
+      <HBox prefHeight="56.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button mnemonicParsing="false" onAction="#back" text="Wróć">
+               <HBox.margin>
+                  <Insets left="10.0" top="10.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <VBox fx:id="gameL" alignment="CENTER" prefHeight="344.0" prefWidth="341.0" BorderPane.alignment="CENTER" />
+   </center>
+   <left>
+      <VBox prefHeight="344.0" prefWidth="147.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextField fx:id="title" promptText="Tytuł" onAction="#handleTitle">
+               <opaqueInsets>
+                  <Insets bottom="5.0" />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets left="5.0" />
+               </VBox.margin>
+            </TextField>
+            <TextField fx:id="publisher" promptText="Wydawca" onAction="#handlePublisher">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets left="5.0" top="5.0" />
+               </VBox.margin>
+            </TextField>
+            <Label text="Filtry">
+               <VBox.margin>
+                  <Insets left="5.0" top="15.0" />
+               </VBox.margin>
+            </Label>
+            <ChoiceBox prefWidth="150.0" onAction="#handleChoice" fx:id="genre">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value ="Brak" />
+                        <String fx:value ="Sport" />
+                        <String fx:value="Survival" />
+                        <String fx:value="RPG" />
+                        <String fx:value="Strategie" />
+                        <String fx:value="Muzyczne" />
+                        <String fx:value="Inne" />
+                    </FXCollections>
+                </items>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </ChoiceBox>
+            <Label text="Sortowanie">
+               <VBox.margin>
+                  <Insets left="5.0" top="15.0" />
+               </VBox.margin>
+            </Label>
+             <ChoiceBox prefWidth="150.0" onAction="#handleSort" fx:id="sortT">
+                 <items>
+                     <FXCollections fx:factory="observableArrayList">
+                         <SortType fx:value="NORMAL"/>
+                         <SortType fx:value ="NAME_ASC" />
+                         <SortType fx:value ="NAME_DESC" />
+                         <SortType fx:value="REALISED_ASC" />
+                         <SortType fx:value="REALISED_DESC" />
+                     </FXCollections>
+                 </items>
+                 <opaqueInsets>
+                     <Insets />
+                 </opaqueInsets>
+                 <VBox.margin>
+                     <Insets top="5.0" />
+                 </VBox.margin>
+             </ChoiceBox>
+         </children>
+      </VBox>
+   </left>
+</BorderPane>
