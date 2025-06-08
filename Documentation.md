@@ -157,7 +157,7 @@ public class Member {
 ### Category (`categories`)
 - **Mapowanie:** Tabela `categories`
 - **Pola:** `categoryId`, `categoryName`
-- **Opis:** Reprezentuje kategorię gry. Pozwala na grupowanie gier według typu (np. przygodowe, logiczne).
+- **Opis:** Reprezentuje kategorię gry. Pozwala na grupowanie gier według typu.
 ```java
 @Entity
 @Table(name = "categories")
