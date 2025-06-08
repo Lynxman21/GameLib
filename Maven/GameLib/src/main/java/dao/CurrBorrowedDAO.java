@@ -15,10 +15,22 @@ import java.util.List;
 
 public class CurrBorrowedDAO {
     private final SessionFactory sessionFactory;
+    private static CurrBorrowedDAO instance = null;
 
-    public CurrBorrowedDAO(SessionFactory sessionFactory) {
+    private CurrBorrowedDAO(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
+
+    public static CurrBorrowedDAO getInstance(SessionFactory sessionFactory){
+        if(instance == null){
+            instance = new CurrBorrowedDAO(sessionFactory);
+        }
+        return instance;
+    }
+
+//    public CurrBorrowedDAO(SessionFactory sessionFactory) {
+//        this.sessionFactory = sessionFactory;
+//    }
 
     public void addBorrowedRecord(int gameId, int memberId, LocalDate borrowedDate, LocalDate dueTo) {
         try (Session session = sessionFactory.openSession()) {

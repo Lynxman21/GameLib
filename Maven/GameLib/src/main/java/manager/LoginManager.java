@@ -4,14 +4,14 @@ import dao.MemberDAO;
 import org.hibernate.*;
 
 public class LoginManager {
-    SessionFactory sf;
+    SessionFactory sessionFactory;
 
-    public LoginManager(SessionFactory sf) {
-        this.sf = sf;
+    public LoginManager(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     public Integer logIn(String mail) {
-        MemberDAO memberDAO = new MemberDAO(sf);
+        MemberDAO memberDAO = MemberDAO.getInstance(sessionFactory);
         return memberDAO.logIn(mail);
     }
 }

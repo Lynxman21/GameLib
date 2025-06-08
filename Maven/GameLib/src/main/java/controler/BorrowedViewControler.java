@@ -35,8 +35,8 @@ public class BorrowedViewControler {
     }
 
     public void initData() {
-        CurrBorrowedDAO currBorrowedDAO = new CurrBorrowedDAO(sessionFactory);
-        MemberDAO memberDAO = new MemberDAO(sessionFactory);
+        CurrBorrowedDAO currBorrowedDAO = CurrBorrowedDAO.getInstance(sessionFactory);
+        MemberDAO memberDAO = MemberDAO.getInstance(sessionFactory);
         Member member = memberDAO.getMember(id);
         List<CurrBorrowed> borrowed =  currBorrowedDAO.checkBorrowedForMember(member);
 

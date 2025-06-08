@@ -14,10 +14,18 @@ import java.util.Collections;
 import java.util.List;
 
 public class GameDAO {
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
+    private static GameDAO instance = null;
 
-    public GameDAO(SessionFactory sessionFactory) {
+    private GameDAO(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
+    }
+
+    public static GameDAO getInstance(SessionFactory sessionFactory){
+        if(instance == null){
+            instance = new GameDAO(sessionFactory);
+        }
+        return instance;
     }
 
     private List<String> getAllCategories(Game game, Session session) {

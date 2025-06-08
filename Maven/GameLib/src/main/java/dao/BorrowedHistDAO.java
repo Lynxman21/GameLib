@@ -12,10 +12,22 @@ import java.util.List;
 
 public class BorrowedHistDAO {
     private final SessionFactory sessionFactory;
+    private static BorrowedHistDAO instance = null;
 
-    public BorrowedHistDAO(SessionFactory sessionFactory) {
+    private BorrowedHistDAO(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
+
+    public static BorrowedHistDAO getInstance(SessionFactory sessionFactory){
+        if(instance == null){
+            instance = new BorrowedHistDAO(sessionFactory);
+        }
+        return instance;
+    }
+
+//    public BorrowedHistDAO(SessionFactory sessionFactory) {
+//        this.sessionFactory = sessionFactory;
+//    }
 
     public void addBorrowedHistoryRecord(int currBorrowedId){
         //TODO możliwe że do zmiany będą parametry funkcji ale to do przedyskutowania

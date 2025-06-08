@@ -58,7 +58,7 @@ public class GameListControler {
 
     public void initData() {
         if (gdao == null) {
-            gdao = new GameDAO(sessionFactory);
+            gdao = GameDAO.getInstance(sessionFactory);
         }
         List<Game> games = gdao.findAllAvailableGames(filter);
         SortData.sortWithMode(games,sortType);

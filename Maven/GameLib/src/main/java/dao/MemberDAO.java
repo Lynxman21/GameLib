@@ -9,10 +9,18 @@ import java.util.Collections;
 import java.util.List;
 
 public class MemberDAO {
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
+    private static MemberDAO instance = null;
 
-    public MemberDAO(SessionFactory sessionFactory) {
+    private MemberDAO(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
+    }
+
+    public static MemberDAO getInstance(SessionFactory sessionFactory){
+        if(instance == null){
+            instance = new MemberDAO(sessionFactory);
+        }
+        return instance;
     }
 
     public Member getMember(Integer id) {

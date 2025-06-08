@@ -14,7 +14,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -52,8 +54,11 @@ public class BorrowedGameViewControler {
     }
 
     public void giveBack(ActionEvent actionEvent) {
-        CurrBorrowedDAO currBorrowedDAO = new CurrBorrowedDAO(sessionFactory);
-        BorrowedHistDAO borrowedHistDAO = new BorrowedHistDAO(sessionFactory);
+        try(Session session = sessionFactory.getCurrentSession()){
+
+        }
+        CurrBorrowedDAO currBorrowedDAO = CurrBorrowedDAO.getInstance(sessionFactory);
+        BorrowedHistDAO borrowedHistDAO = BorrowedHistDAO.getInstance(sessionFactory);
         LocalDate dueTo = currBorrowed.getDueTo();
 
         if (LocalDate.now().isBefore(dueTo)) {

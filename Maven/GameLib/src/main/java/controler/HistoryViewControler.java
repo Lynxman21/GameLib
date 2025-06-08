@@ -39,8 +39,8 @@ public class HistoryViewControler {
     }
 
     public void initData() {
-        BorrowedHistDAO borrowedHistDAO = new BorrowedHistDAO(sessionFactory);
-        MemberDAO memberDAO = new MemberDAO(sessionFactory);
+        BorrowedHistDAO borrowedHistDAO = BorrowedHistDAO.getInstance(sessionFactory);
+        MemberDAO memberDAO = MemberDAO.getInstance(sessionFactory);
         List<BorrowedHist> borrowed = borrowedHistDAO.checkBorrowedHistForMember(memberDAO.getMember(id));
 
         for (BorrowedHist b : borrowed) {

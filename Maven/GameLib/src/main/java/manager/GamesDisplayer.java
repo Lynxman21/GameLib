@@ -31,7 +31,7 @@ public class GamesDisplayer {
     }
 
     public void getAllGames() {
-        GameDAO gameDAO = new GameDAO(sessionFactory);
+        GameDAO gameDAO = GameDAO.getInstance(sessionFactory);
         games = gameDAO.findAllAvailableGames(gameFilter);
     }
 

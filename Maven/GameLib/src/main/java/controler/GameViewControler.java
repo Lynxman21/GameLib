@@ -43,7 +43,7 @@ public class GameViewControler {
     }
 
     public void dataInit() {
-        GameDAO gd = new GameDAO(sessionFactory);
+        GameDAO gd = GameDAO.getInstance(sessionFactory);
         Game game = gd.findGameByName(name);
 
         Label title = new Label(name);
@@ -57,7 +57,7 @@ public class GameViewControler {
 
     @FXML
     public void borrow(ActionEvent event) {
-        CurrBorrowedDAO cbr = new CurrBorrowedDAO(sessionFactory);
+        CurrBorrowedDAO cbr = CurrBorrowedDAO.getInstance(sessionFactory);
         LocalDate dueTo = LocalDate.now().plusDays(60);
 
         cbr.addBorrowedRecord(gameId,id,LocalDate.now(),dueTo);
