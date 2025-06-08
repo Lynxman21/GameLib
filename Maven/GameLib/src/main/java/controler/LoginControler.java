@@ -60,6 +60,7 @@ public class LoginControler {
                         e.printStackTrace();
                     }
                 }
+
                 transaction.commit();
             }catch (Exception e){
                 transaction.rollback();

@@ -70,9 +70,10 @@ public class BorrowedGameViewControler {
                 borrowedHistDAO.addBorrowedHistoryRecord(currBorrowed.getId(), penalty, session);
 
                 currBorrowedDAO.removeBorrowedRecord(currBorrowed.getId(), session);
-                back(actionEvent);
 
                 transaction.commit();
+
+                back(actionEvent);
             }catch(Exception e){
                 transaction.rollback();
                 e.printStackTrace();

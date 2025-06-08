@@ -58,6 +58,7 @@ public class GameViewControler {
                 gameId = game.getId();
 
                 gameInfo.getChildren().addAll(title,publisher,date);
+
                 transaction.commit();
             }catch (Exception e){
                 transaction.rollback();
@@ -75,10 +76,9 @@ public class GameViewControler {
                 LocalDate dueTo = LocalDate.now().plusDays(60);
 
                 cbr.addBorrowedRecord(gameId,id,LocalDate.now(),dueTo,session);
+                transaction.commit();
 
                 setScene(event);
-
-                transaction.commit();
             }catch (Exception e){
                 transaction.rollback();
                 e.printStackTrace();
