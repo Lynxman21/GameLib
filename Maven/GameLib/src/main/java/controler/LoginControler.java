@@ -8,11 +8,13 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import manager.HibernateUtil;
 import manager.LoginManager;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import org.hibernate.Transaction;
 
 import java.io.IOException;
 
@@ -29,29 +31,38 @@ public class LoginControler {
 
     @FXML
     private void handleLogin(ActionEvent event) {
-        String mail = mailField.getText();
+        try(Session session = sessionFactory.openSession()){
+            Transaction transaction = session.beginTransaction();
+            try{
+                String mail = mailField.getText();
 
-        if (mail.isBlank()) {
-            return;
-        }
+                if (mail.isBlank()) {
+                    return;
+                }
 
-        LoginManager lg = new LoginManager(sessionFactory);
-        id = lg.logIn(mail);
-        if (id == null) {
-            errorLable.setVisible(true);
-        } else {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ClientPanel.fxml"));
-                Parent root = loader.load();
+                LoginManager lg = new LoginManager(sessionFactory);
+                id = lg.logIn(mail, session);
+                if (id == null) {
+                    errorLable.setVisible(true);
+                } else {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ClientPanel.fxml"));
+                        Parent root = loader.load();
 
-                PanelControler controller = loader.getController();
-                controller.setId(id);
-                controller.setSessionFactory(sessionFactory);
+                        PanelControler controller = loader.getController();
+                        controller.setId(id);
+                        controller.setSessionFactory(sessionFactory);
 
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                stage.setScene(new Scene(root));
-                stage.show();
-            } catch (IOException e) {
+                        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                        stage.setScene(new Scene(root));
+                        stage.show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                transaction.commit();
+            }catch (Exception e){
+                transaction.rollback();
                 e.printStackTrace();
             }
         }

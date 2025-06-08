@@ -13,10 +13,10 @@ public class DatabaseConnectionTester {
             session.beginTransaction();
             session.createNativeQuery("SELECT 1").getSingleResult();
             session.getTransaction().commit();
-            return true; // Connection successful
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
-            return false; // Connection failed
+            return false;
         }
     }
 }

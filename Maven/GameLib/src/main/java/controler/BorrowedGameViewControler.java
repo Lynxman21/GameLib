@@ -1,10 +1,8 @@
 package controler;
 
 import Entities.CurrBorrowed;
-import Entities.Game;
 import dao.BorrowedHistDAO;
 import dao.CurrBorrowedDAO;
-import dao.GameDAO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -45,30 +43,44 @@ public class BorrowedGameViewControler {
 
 
     public void dataInit() {
+        try(Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            try {
+                Label title = new Label("Tytuł: " + currBorrowed.getGameCopy().getGame().getName());
+                Label borrowedDate = new Label("Data wypożyczenia: " + currBorrowed.getBorrowedDate().toString());
+                Label dueTo = new Label("Data do kiedy trzeba oddać: " + currBorrowed.getDueTo().toString());
 
-        Label title = new Label("Tytuł: " + currBorrowed.getGameCopy().getGame().getName());
-        Label borrowedDate = new Label("Data wypożyczenia: " + currBorrowed.getBorrowedDate().toString());
-        Label dueTo = new Label("Data do kiedy trzeba oddać: " + currBorrowed.getDueTo().toString());
-
-        borrowInfo.getChildren().addAll(title,borrowedDate,dueTo);
+                borrowInfo.getChildren().addAll(title, borrowedDate, dueTo);
+                transaction.commit();
+            } catch (Exception e) {
+                transaction.rollback();
+            }
+        }
     }
 
     public void giveBack(ActionEvent actionEvent) {
-        try(Session session = sessionFactory.getCurrentSession()){
+        try(Session session = sessionFactory.openSession()){
+            Transaction transaction = session.beginTransaction();
+            try{
+                CurrBorrowedDAO currBorrowedDAO = CurrBorrowedDAO.getInstance();
+                BorrowedHistDAO borrowedHistDAO = BorrowedHistDAO.getInstance();
+                LocalDate dueTo = currBorrowed.getDueTo();
 
+                if (LocalDate.now().isBefore(dueTo)) {
+                    borrowedHistDAO.addBorrowedHistoryRecord(currBorrowed.getId(), 0, session);
+                } else {
+                    borrowedHistDAO.addBorrowedHistoryRecord(currBorrowed.getId(),20, session);
+                }
+
+                currBorrowedDAO.removeBorrowedRecord(currBorrowed.getId(), session);
+                back(actionEvent);
+
+                transaction.commit();
+            }catch(Exception e){
+                transaction.rollback();
+                e.printStackTrace();
+            }
         }
-        CurrBorrowedDAO currBorrowedDAO = CurrBorrowedDAO.getInstance(sessionFactory);
-        BorrowedHistDAO borrowedHistDAO = BorrowedHistDAO.getInstance(sessionFactory);
-        LocalDate dueTo = currBorrowed.getDueTo();
-
-        if (LocalDate.now().isBefore(dueTo)) {
-            borrowedHistDAO.addBorrowedHistoryRecord(currBorrowed.getId());
-        } else {
-            borrowedHistDAO.addBorrowedHistoryRecord(currBorrowed.getId(),20);
-        }
-
-        currBorrowedDAO.removeBorrowedRecord(currBorrowed.getId());
-        back(actionEvent);
     }
 
     @FXML

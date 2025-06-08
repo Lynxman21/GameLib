@@ -1,6 +1,5 @@
 package controler;
 
-import Entities.CurrBorrowed;
 import Entities.Game;
 import dao.CurrBorrowedDAO;
 import dao.GameDAO;
@@ -12,9 +11,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import javafx.scene.control.Label;
+import org.hibernate.Transaction;
+
 import java.io.IOException;
 import java.time.LocalDate;
 
@@ -43,58 +45,67 @@ public class GameViewControler {
     }
 
     public void dataInit() {
-        GameDAO gd = GameDAO.getInstance(sessionFactory);
-        Game game = gd.findGameByName(name);
+        try(Session session = sessionFactory.openSession()){
+            Transaction transaction = session.beginTransaction();
+            try {
+                GameDAO gd = GameDAO.getInstance();
+                Game game = gd.findGameByName(name, session);
 
-        Label title = new Label(name);
-        Label publisher = new Label(game.getPublisher().getCompanyName());
-        Label date = new Label(game.getReleaseDate().toString());
+                Label title = new Label(name);
+                Label publisher = new Label(game.getPublisher().getCompanyName());
+                Label date = new Label(game.getReleaseDate().toString());
 
-        gameId = game.getId();
+                gameId = game.getId();
 
-        gameInfo.getChildren().addAll(title,publisher,date);
+                gameInfo.getChildren().addAll(title,publisher,date);
+                transaction.commit();
+            }catch (Exception e){
+                transaction.rollback();
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML
     public void borrow(ActionEvent event) {
-        CurrBorrowedDAO cbr = CurrBorrowedDAO.getInstance(sessionFactory);
-        LocalDate dueTo = LocalDate.now().plusDays(60);
+        try(Session session = sessionFactory.openSession()){
+            Transaction transaction = session.beginTransaction();
+            try {
+                CurrBorrowedDAO cbr = CurrBorrowedDAO.getInstance();
+                LocalDate dueTo = LocalDate.now().plusDays(60);
 
-        cbr.addBorrowedRecord(gameId,id,LocalDate.now(),dueTo);
+                cbr.addBorrowedRecord(gameId,id,LocalDate.now(),dueTo,session);
 
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GameList.fxml"));
-            Parent root = loader.load();
+                setScene(event);
 
-            GameListControler controller = loader.getController();
-            controller.setId(id);
-            controller.setSessionFactory(sessionFactory);
-            controller.initData();
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+                transaction.commit();
+            }catch (Exception e){
+                transaction.rollback();
+                e.printStackTrace();
+            }
         }
     }
 
     @FXML
     public void back(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GameList.fxml"));
-            Parent root = loader.load();
-
-            GameListControler controller = loader.getController();
-            controller.setId(id);
-            controller.setSessionFactory(sessionFactory);
-            controller.initData();
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
+            setScene(event);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void setScene(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/GameList.fxml"));
+        Parent root = loader.load();
+
+        GameListControler controller = loader.getController();
+        controller.setId(id);
+        controller.setSessionFactory(sessionFactory);
+        controller.initData();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 }

@@ -1,5 +1,6 @@
 package controler;
 
+
 import Entities.Game;
 import dao.GameDAO;
 import javafx.event.ActionEvent;
@@ -11,7 +12,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import search.GameFilter;
 
 import javafx.scene.control.TextField;
@@ -57,41 +60,29 @@ public class GameListControler {
     }
 
     public void initData() {
-        if (gdao == null) {
-            gdao = GameDAO.getInstance(sessionFactory);
-        }
-        List<Game> games = gdao.findAllAvailableGames(filter);
-        SortData.sortWithMode(games,sortType);
-
-        for (Game g : games) {
-            Button button = new Button(g.getName());
-            button.setPrefHeight(50);
-            button.setPrefWidth(200);
-            button.setStyle("-fx-font-size: 16px;");
-            button.setOnAction(event -> {
-                try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/GameView.fxml"));
-                    Parent root = loader.load();
-
-                    GameViewControler controller = loader.getController();
-                    controller.setId(id);
-                    controller.setSessionFactory(sessionFactory);
-                    controller.setName(g.getName());
-                    controller.dataInit();
-
-                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                    stage.setScene(new Scene(root));
-                    stage.show();
-                } catch (IOException e) {
-                    e.printStackTrace();
+        try(Session session = sessionFactory.openSession()){
+            Transaction transaction = session.beginTransaction();
+            try {
+                if (gdao == null) {
+                    gdao = GameDAO.getInstance();
                 }
-            });
-            gameL.getChildren().add(button);
+                List<Game> games = gdao.findAllAvailableGames(filter, session);
+                SortData.sortWithMode(games,sortType);
+
+                for (Game g : games) {
+                    Button button = getButton(g);
+                    gameL.getChildren().add(button);
+                }
+                transaction.commit();
+            }catch (Exception e){
+                transaction.rollback();
+                e.printStackTrace();
+            }
         }
     }
 
     @FXML
-    public void handleChoice(ActionEvent event) {
+    public void handleChoice() {
         String type = genre.getValue();
         if (type.equals("Brak")) {
             filter.setCategoryName(null);
@@ -103,7 +94,7 @@ public class GameListControler {
     }
 
     @FXML
-    public void handleSort(ActionEvent event) {
+    public void handleSort() {
         SortType type = sortT.getValue();
 
         if (type.equals("Brak")) {
@@ -116,7 +107,7 @@ public class GameListControler {
     }
 
     @FXML
-    public void handleTitle(ActionEvent event) {
+    public void handleTitle() {
         String name = title.getText();
 
         if (name.isBlank()) {
@@ -130,7 +121,7 @@ public class GameListControler {
     }
 
     @FXML
-    public void handlePublisher(ActionEvent event) {
+    public void handlePublisher() {
         String name = publisher.getText();
 
         if (name.isBlank()) {
@@ -159,5 +150,31 @@ public class GameListControler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private Button getButton(Game g) {
+        Button button = new Button(g.getName());
+        button.setPrefHeight(50);
+        button.setPrefWidth(200);
+        button.setStyle("-fx-font-size: 16px;");
+        button.setOnAction(event -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/GameView.fxml"));
+                Parent root = loader.load();
+
+                GameViewControler controller = loader.getController();
+                controller.setId(id);
+                controller.setSessionFactory(sessionFactory);
+                controller.setName(g.getName());
+                controller.dataInit();
+
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                stage.setScene(new Scene(root));
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        return button;
     }
 }

@@ -10,8 +10,8 @@ public class LoginManager {
         this.sessionFactory = sessionFactory;
     }
 
-    public Integer logIn(String mail) {
-        MemberDAO memberDAO = MemberDAO.getInstance(sessionFactory);
-        return memberDAO.logIn(mail);
+    public Integer logIn(String mail, Session session) {
+        MemberDAO memberDAO = MemberDAO.getInstance();
+        return memberDAO.logIn(mail, session);
     }
 }

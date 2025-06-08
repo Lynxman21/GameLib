@@ -1,53 +1,40 @@
 package dao;
 
-import Entities.Category;
 import Entities.Game;
-import Entities.GameCountVW;
-import org.hibernate.HibernateError;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import search.GameFilter;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class GameDAO {
-    private final SessionFactory sessionFactory;
     private static GameDAO instance = null;
 
-    private GameDAO(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+    private GameDAO() {}
 
-    public static GameDAO getInstance(SessionFactory sessionFactory){
+    public static GameDAO getInstance(){
         if(instance == null){
-            instance = new GameDAO(sessionFactory);
+            instance = new GameDAO();
         }
         return instance;
     }
 
-    private List<String> getAllCategories(Game game, Session session) {
+    private List<String> getAllCategories(Game game, Session session) throws IllegalArgumentException{
+        if(game == null){
+            throw new IllegalArgumentException("Game is null");
+        }
         return session.createQuery("select cgl.category.categoryName from CategoryGameLink cgl where cgl.game.id = :gameId")
                 .setParameter("gameId",game.getId())
                 .list();
     }
 
-    public Game findGameByName(String name) {
-        try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("select g from Game g where g.name=:name",Game.class)
-                    .setParameter("name",name)
-                    .getSingleResult();
-        } catch (Exception e) {
-            System.out.println("Błąd podczas wyszukiwania gier: " + e.getMessage());
-            return null;
-        }
+    public Game findGameByName(String name, Session session) {
+        return session.createQuery("select g from Game g where g.name=:name",Game.class)
+                .setParameter("name",name)
+                .getSingleResult();
     }
 
-    public List<Game> findAllAvailableGames(GameFilter gameFilter) {
-        try (Session session = sessionFactory.openSession()) {
-
+    public List<Game> findAllAvailableGames(GameFilter gameFilter, Session session){
             List<Integer> gamesId =  session.createQuery(
                     "select c.id from GameCountVW c where c.amount > 0",Integer.class
             ).list();
@@ -72,9 +59,5 @@ public class GameDAO {
                 games.add(game);
             }
             return games;
-        } catch (Exception e) {
-            System.out.println("Błąd podczas wyszukiwania gier: " + e.getMessage());
-            return Collections.emptyList();
-        }
     }
 }

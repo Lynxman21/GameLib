@@ -1,10 +1,6 @@
 package controler;
 
 import Entities.BorrowedHist;
-import Entities.CurrBorrowed;
-import dao.BorrowedHistDAO;
-import dao.CurrBorrowedDAO;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -13,12 +9,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import java.io.IOException;
-import java.time.LocalDate;
 
-public class BorrowedHIstGameViewControler {
+public class BorrowedHistGameViewControler {
     private Integer id;
 
     private SessionFactory sessionFactory;
@@ -41,15 +38,23 @@ public class BorrowedHIstGameViewControler {
     }
 
     public void dataInit() {
+        try(Session session = sessionFactory.openSession()){
+            Transaction transaction = session.beginTransaction();
+            try {
+                Label title = new Label("Tytuł: " + borrowedHist.getGameCopy().getGame().getName());
+                Label borrowedDate = new Label("Data wypożyczenia: " + borrowedHist.getBorrowedDate().toString());
+                Label dueTo = new Label("Data do kiedy trzeba oddać: " + borrowedHist.getDueDate().toString());
+                Label actualReturn = new Label("Aktualna data zwrotu: " + borrowedHist.getActualReturnDate().toString());
+                Label status = new Label("Status: " + borrowedHist.getStatus());
+                Label penalty = new Label("Kara: " + borrowedHist.getPenalty());
 
-        Label title = new Label("Tytuł: " + borrowedHist.getGameCopy().getGame().getName());
-        Label borrowedDate = new Label("Data wypożyczenia: " + borrowedHist.getBorrowedDate().toString());
-        Label dueTo = new Label("Data do kiedy trzeba oddać: " + borrowedHist.getDueDate().toString());
-        Label actualReturn = new Label("Aktualna data zwrotu: " + borrowedHist.getActualReturnDate().toString());
-        Label status = new Label("Status: " + borrowedHist.getStatus());
-        Label penalty = new Label("Kara: " + borrowedHist.getPenalty());
-
-        borrowInfo.getChildren().addAll(title,borrowedDate,dueTo,actualReturn,status,penalty);
+                borrowInfo.getChildren().addAll(title, borrowedDate, dueTo, actualReturn, status, penalty);
+                transaction.commit();
+            }catch (Exception e){
+                transaction.rollback();
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML

@@ -1,53 +1,33 @@
 package dao;
 
 import Entities.Member;
-import jakarta.persistence.NoResultException;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-
-import java.util.Collections;
-import java.util.List;
 
 public class MemberDAO {
-    private final SessionFactory sessionFactory;
     private static MemberDAO instance = null;
 
-    private MemberDAO(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+    private MemberDAO() {}
 
-    public static MemberDAO getInstance(SessionFactory sessionFactory){
+    public static MemberDAO getInstance(){
         if(instance == null){
-            instance = new MemberDAO(sessionFactory);
+            instance = new MemberDAO();
         }
         return instance;
     }
 
-    public Member getMember(Integer id) {
-        try(Session session = sessionFactory.openSession()) {
-            List<Member> list = session.createQuery("select m from Member m where m.id=:id",Member.class).setParameter("id",id).getResultList();
-
-            if (list.size() > 0) {
-                return list.get(0);
-            }
-            return null;
-        } catch (Exception e) {
-            System.out.println("Błąd podczas wyszukiwania użytkownika: " + e.getMessage());
-            return null;
-        }
+    public Member getMember(int id, Session session) {
+            return session
+                    .createQuery("select m from Member m where m.id=:id",Member.class)
+                    .setParameter("id",id)
+                    .getSingleResult();
     }
 
-    public Integer logIn(String email) {
-        try(Session session = sessionFactory.openSession()) {
-            List<Member> list =  session.createQuery("select m from Member m where m.email=:email",Member.class).setParameter("email",email).getResultList();
-            if (list.size() > 0) {
-                return list.get(0).getId();
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            System.out.println("Błąd podczas wyszukiwania użytkownika: " + e.getMessage());
-            return null;
-        }
+    public Integer logIn(String email, Session session) {
+        Member member = session
+                .createQuery("select m from Member m where m.email=:email",Member.class)
+                .setParameter("email",email)
+                .getSingleResult();
+
+        return member == null ? null : member.getId();
     }
 }

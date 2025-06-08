@@ -2,6 +2,7 @@ package manager;
 
 import Entities.Game;
 import dao.GameDAO;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import search.GameFilter;
 import search.SortData;
@@ -30,13 +31,13 @@ public class GamesDisplayer {
         this.mode = SortType.NORMAL;
     }
 
-    public void getAllGames() {
-        GameDAO gameDAO = GameDAO.getInstance(sessionFactory);
-        games = gameDAO.findAllAvailableGames(gameFilter);
+    public void getAllGames(Session session) {
+        GameDAO gameDAO = GameDAO.getInstance();
+        games = gameDAO.findAllAvailableGames(gameFilter, session);
     }
 
-    public void printAllResults() {
-        getAllGames();
+    public void printAllResults(Session session) {
+        getAllGames(session);
         SortData.sortWithMode(games,mode);
 
         for (Game game: games) {
