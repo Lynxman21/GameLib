@@ -66,11 +66,8 @@ public class BorrowedGameViewControler {
                 BorrowedHistDAO borrowedHistDAO = BorrowedHistDAO.getInstance();
                 LocalDate dueTo = currBorrowed.getDueTo();
 
-                if (LocalDate.now().isBefore(dueTo)) {
-                    borrowedHistDAO.addBorrowedHistoryRecord(currBorrowed.getId(), 0, session);
-                } else {
-                    borrowedHistDAO.addBorrowedHistoryRecord(currBorrowed.getId(),20, session);
-                }
+                int penalty = LocalDate.now().isBefore(dueTo) ? 0 : 20;
+                borrowedHistDAO.addBorrowedHistoryRecord(currBorrowed.getId(), penalty, session);
 
                 currBorrowedDAO.removeBorrowedRecord(currBorrowed.getId(), session);
                 back(actionEvent);

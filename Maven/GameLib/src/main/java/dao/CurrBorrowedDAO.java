@@ -47,7 +47,6 @@ public class CurrBorrowedDAO {
         currBorrowed.setBorrowedDate(borrowedDate);
         currBorrowed.setDueTo(dueTo);
 
-        // Persist the entity
         session.persist(currBorrowed);
 
     }
