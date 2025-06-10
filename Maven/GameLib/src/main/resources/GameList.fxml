@@ -56,12 +56,9 @@
                 <items>
                     <FXCollections fx:factory="observableArrayList">
                         <String fx:value ="Brak" />
-                        <String fx:value ="Sport" />
-                        <String fx:value="Survival" />
-                        <String fx:value="RPG" />
-                        <String fx:value="Strategie" />
-                        <String fx:value="Muzyczne" />
-                        <String fx:value="Inne" />
+                        <String fx:value ="Actionventure" />
+                        <String fx:value="Roleplay Saga" />
+                        <String fx:value="Puzzlecraft" />
                     </FXCollections>
                 </items>
                <opaqueInsets>
